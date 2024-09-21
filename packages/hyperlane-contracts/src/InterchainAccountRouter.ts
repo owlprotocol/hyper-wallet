@@ -4,6 +4,7 @@ import {
     getLocalInterchainAccount_uint32_bytes32_bytes32_address as getLocalInterchainAccountAbi,
     quoteGasPayment as quoteGasPaymentAbi,
     callRemoteWithOverrides as callRemoteWithOverridesAbi,
+    callRemote_uint32__bytes32_uint256_bytes_array_bytes as callRemoteAbi,
 } from "./artifacts/InterchainAccountRouter.js";
 
 export interface GetRemoteInterchainAccountParams {
@@ -69,6 +70,37 @@ export async function quoteGasPayment(params: QuoteGasPaymentParams) {
         abi: [quoteGasPaymentAbi],
         functionName: "quoteGasPayment",
         args: [destination, messageBody, gasLimit],
+    });
+}
+
+export interface EncodeCallRemoteParams {
+    destination: number;
+    hookMetadata: Hex;
+    calls: { to: Address; value?: bigint; data: Hex }[];
+}
+
+/**
+ * Encode `callRemote` call
+ * @param params
+ * @returns data
+ */
+export function encodeCallRemote(params: EncodeCallRemoteParams): Hex {
+    const { destination, hookMetadata, calls } = params;
+
+    return encodeFunctionData({
+        abi: [callRemoteAbi],
+        functionName: "callRemote",
+        args: [
+            destination,
+            calls.map((c) => {
+                return {
+                    to: padHex(c.to, { size: 32 }),
+                    value: c.value ?? 0n,
+                    data: c.data,
+                };
+            }),
+            hookMetadata,
+        ],
     });
 }
 
