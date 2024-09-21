@@ -36,6 +36,9 @@
     "turbo:login": "turbo login",
     "turbo:link": "turbo link"
   },
+  "dependencies": {
+    "next": "12.1.5"
+  },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
     "@esbuild-plugins/node-resolve": "^0.1.4",
