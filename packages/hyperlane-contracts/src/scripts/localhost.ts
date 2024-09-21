@@ -38,58 +38,62 @@ const localMainWalletClient = createWalletClient({
     account: privateKeyToAccount("0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e"),
 });
 
-// Get the interchain account address from the main chain using its owner
-const interchainAccountFromMain = await getRemoteInterchainAccount({
-    publicClient: localMainClient,
-    router: INTERCHAIN_ACCOUNT_ROUTER_ADDRESS_LOCALHOST,
-    owner: localMainWalletClient.account.address,
-    ism: ISM_ADDRESS_LOCALHOST,
-});
+async function main() {
+    // Get the interchain account address from the main chain using its owner
+    const interchainAccountFromMain = await getRemoteInterchainAccount({
+        publicClient: localMainClient,
+        router: INTERCHAIN_ACCOUNT_ROUTER_ADDRESS_LOCALHOST,
+        owner: localMainWalletClient.account.address,
+        ism: ISM_ADDRESS_LOCALHOST,
+    });
 
-// Get interchain account address from the remote chain using the owner & origin
-const interchainAccountFromRemote = await getLocalInterchainAccount({
-    publicClient: localRemoteClient,
-    origin: localMainChain.id,
-    router: INTERCHAIN_ACCOUNT_ROUTER_ADDRESS_LOCALHOST,
-    owner: localMainWalletClient.account.address,
-    ism: ISM_ADDRESS_LOCALHOST,
-});
+    // Get interchain account address from the remote chain using the owner & origin
+    const interchainAccountFromRemote = await getLocalInterchainAccount({
+        publicClient: localRemoteClient,
+        origin: localMainChain.id,
+        router: INTERCHAIN_ACCOUNT_ROUTER_ADDRESS_LOCALHOST,
+        owner: localMainWalletClient.account.address,
+        ism: ISM_ADDRESS_LOCALHOST,
+    });
 
-//should be the same
-console.debug({ interchainAccountFromMain, interchainAccountFromRemote });
+    //should be the same
+    console.debug({ interchainAccountFromMain, interchainAccountFromRemote });
 
-// get default ISM
-const defaultIsm = await localRemoteClient.readContract({
-    address: MAILBOX_ADDRESS_LOCALHOST,
-    abi: [defaultIsmAbi],
-    functionName: "defaultIsm",
-});
+    // get default ISM
+    const defaultIsm = await localRemoteClient.readContract({
+        address: MAILBOX_ADDRESS_LOCALHOST,
+        abi: [defaultIsmAbi],
+        functionName: "defaultIsm",
+    });
 
-// we test out a simple read call from the interchain account
-const calls = [
-    {
+    // we test out a simple read call from the interchain account
+    const calls = [
+        {
+            to: INTERCHAIN_ACCOUNT_ROUTER_ADDRESS_LOCALHOST,
+            data: encodeFunctionData({
+                abi: [domains],
+                functionName: "domains",
+            }),
+        } as const,
+    ];
+
+    // call remote data
+    const callRemoteData = encodeCallRemoteWithOverrides({
+        destination: localRemoteChain.id,
+        router: INTERCHAIN_ACCOUNT_ROUTER_ADDRESS_LOCALHOST,
+        ism: defaultIsm,
+        calls,
+    });
+
+    //execute
+    const hash = await localMainWalletClient.sendTransaction({
         to: INTERCHAIN_ACCOUNT_ROUTER_ADDRESS_LOCALHOST,
-        data: encodeFunctionData({
-            abi: [domains],
-            functionName: "domains",
-        }),
-    } as const,
-];
+        data: callRemoteData,
+    });
 
-// call remote data
-const callRemoteData = encodeCallRemoteWithOverrides({
-    destination: localRemoteChain.id,
-    router: INTERCHAIN_ACCOUNT_ROUTER_ADDRESS_LOCALHOST,
-    ism: defaultIsm,
-    calls,
-});
+    console.debug({ hash });
+    const receipt = await localMainClient.waitForTransactionReceipt({ hash });
+    console.debug({ receipt });
+}
 
-//execute
-const hash = await localMainWalletClient.sendTransaction({
-    to: INTERCHAIN_ACCOUNT_ROUTER_ADDRESS_LOCALHOST,
-    data: callRemoteData,
-});
-
-console.debug({ hash });
-const receipt = await localMainClient.waitForTransactionReceipt({ hash });
-console.debug({ receipt });
+main();
