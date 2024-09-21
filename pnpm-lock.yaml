@@ -80,6 +80,12 @@ importers:
       '@hyperlane-xyz/core':
         specifier: 5.2.1
         version: 5.2.1(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6(bufferutil@4.0.8)(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10))(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(@types/sinon-chai@3.2.12)(bufferutil@4.0.8)(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat-deploy@0.12.4(bufferutil@4.0.8)(utf-8-validate@5.0.10))(solidity-bytes-utils@0.8.2)(utf-8-validate@5.0.10)
+      '@openzeppelin/contracts':
+        specifier: ^4.9.3
+        version: 4.9.6
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^4.9.3
+        version: 4.9.6
       '@owlprotocol/viem-utils':
         specifier: ^3.0.0
         version: 3.1.0(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.22.4)

@@ -58,7 +58,7 @@
     }
   },
   "scripts": {
-    "build": "npm-run-all build:hardhat build:artifacts build:zsol build:esm",
+    "build": "npm-run-all build:hardhat build:artifacts build:esm",
     "build:artifacts": "tsx src/codegen/runHardhatArtifactsExport.ts",
     "build:esbuild": "node esbuild.config.mjs",
     "build:esbuild:watch": "ESBUILD_WATCH=true node esbuild.config.mjs",
@@ -89,6 +89,8 @@
     "@owlprotocol/viem-utils": "^3.0.0",
     "@owlprotocol/zod-sol": "^3.0.0",
     "@hyperlane-xyz/core": "5.2.1",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@openzeppelin/contracts-upgradeable": "^4.9.3",
     "viem": "2.9.20",
     "zod": "3.22.4"
   },
