@@ -165,8 +165,8 @@ export default function SessionSendTransactionModal() {
             approveLoader={{ active: isLoadingApprove }}
             rejectLoader={{ active: isLoadingReject }}
         >
-            <RequestDataCard data={transaction} />
-            <Divider y={1} />
+            {/*<RequestDataCard data={transaction} />
+            <Divider y={1} />*/}
             <RequesDetailsCard chains={[chainId ?? '']} protocol={requestSession?.relay.protocol} />
             <Divider y={1} />
             <RequestMethodCard methods={[request.method]} />
