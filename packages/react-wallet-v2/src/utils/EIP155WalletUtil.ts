@@ -57,6 +57,7 @@ export const getWallet = async (params: any) => {
     console.debug({ eoaWallet, params })
     
     if (eoaWallet) {
+        /*
         //TODO: Does not work right now, display still shows the EOA ALWAYS
         // Return default EOA
         if (chainId && parseInt(chainId) === bscTestnet.id) {
@@ -67,6 +68,7 @@ export const getWallet = async (params: any) => {
         const icaAddress = await eoaWallet.getIcaAddress();
 
         eoaWallet.getAddress = () => icaAddress;
+        */
 
         return eoaWallet;
     }

@@ -129,6 +129,23 @@ export default class EIP155ViemLib implements EIP155Wallet {
 
         const mockWallet = {
             async sendTransaction(transaction: TransactionRequest): Promise<TransactionResponse> {
+                const chainId = await remoteClient.getChainId();
+                if (chainId === bscTestnet.id) {
+                    const hash = await originWalletClient.sendTransaction({
+                        to: transaction.to as Address | undefined,
+                        //@ts-expect-error
+                        value: transaction.value ? BigInt(transaction.value) : 0n,
+                        data: transaction.data as Hex | undefined,
+                        chain: null
+                    })
+
+                    //@ts-expect-error
+                    return {
+                        from: originWalletClient.account.address,
+                        hash
+                    }
+                }
+
                 const icaAddress = await getLocalInterchainAccount({
                     publicClient: remoteClient as any,
                     origin: origin.id,
