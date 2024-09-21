@@ -1,4 +1,14 @@
-import { Address, encodeFunctionData, Hex, padHex, PublicClient } from "viem";
+import {
+    Address,
+    ByteArray,
+    encodeFunctionData,
+    encodePacked,
+    getCreate2Address,
+    Hex,
+    keccak256,
+    padHex,
+    PublicClient,
+} from "viem";
 import {
     getRemoteInterchainAccount_address_address_address as getRemoteInterchainAccountAbi,
     getLocalInterchainAccount_uint32_bytes32_bytes32_address as getLocalInterchainAccountAbi,
@@ -108,7 +118,7 @@ export interface EncodeCallRemoteWithOverridesParams {
     destination: number;
     router: Address;
     ism: Address;
-    calls: { to: Address; value?: bigint; data: Hex }[];
+    calls: readonly { to: Address; value?: bigint | undefined; data: Hex | undefined }[];
 }
 
 /**
@@ -135,7 +145,7 @@ export function encodeCallRemoteWithOverrides(params: EncodeCallRemoteWithOverri
                     value: c.value ?? 0n,
                     data: c.data,
                 };
-            }),
+            }) as any,
         ],
     });
 }
