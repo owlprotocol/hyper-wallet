@@ -108,7 +108,7 @@ export interface EncodeCallRemoteWithOverridesParams {
     destination: number;
     router: Address;
     ism: Address;
-    calls: { to: Address; value?: bigint; data: Hex }[];
+    calls: readonly { to: Address; value?: bigint | undefined; data: Hex | undefined }[];
 }
 
 /**
@@ -135,7 +135,7 @@ export function encodeCallRemoteWithOverrides(params: EncodeCallRemoteWithOverri
                     value: c.value ?? 0n,
                     data: c.data,
                 };
-            }),
+            }) as any,
         ],
     });
 }
