@@ -8,13 +8,16 @@ import {
     http,
     createPublicClient,
     zeroAddress,
-    Chain
+    Chain,
+    PublicClient,
+    Hex
 } from 'viem'
 import { english, generateMnemonic } from 'viem/accounts'
 import { mnemonicToAccount } from 'viem/accounts'
 import { providers, Wallet } from 'ethers'
 import {
     getLocalInterchainAccount,
+    getRemoteInterchainAccount,
     InterchainAccount,
     sendTransaction,
     writeContract
@@ -58,6 +61,7 @@ export default class EIP155ViemLib implements EIP155Wallet {
     mnemonic: string
     account: Account
     originWalletClient: WalletClient<Transport, Chain, Account>
+    originPublicClient: PublicClient<Transport, Chain>
 
     constructor(mnemonic: string) {
         this.mnemonic = mnemonic
@@ -67,6 +71,11 @@ export default class EIP155ViemLib implements EIP155Wallet {
             chain: origin,
             transport: http(),
             account: this.account
+        })
+
+        this.originPublicClient = createPublicClient({
+            chain: origin,
+            transport: http(),
         })
     }
 
@@ -83,9 +92,19 @@ export default class EIP155ViemLib implements EIP155Wallet {
         throw new Error('Unsupported getPrivateKey')
     }
 
-    async getAddress(): Promise<string> {
-        // return this.account.address
-        return Promise.resolve(zeroAddress)
+    getAddress(): string {
+        return this.account.address
+    }
+
+    async getIcaAddress(): Promise<Address> {
+        const icaAddress = await getRemoteInterchainAccount({
+            publicClient: this.originPublicClient as any,
+            mainRouter: originAddresses.interchainAccountRouter,
+            owner: this.originWalletClient.account.address,
+            remoteIsm: remoteAddresses.interchainAccountIsm,
+            remoteRouter: remoteAddresses.interchainAccountRouter
+        })
+        return icaAddress;
     }
 
     signMessage(message: string): Promise<string> {
@@ -144,6 +163,7 @@ export default class EIP155ViemLib implements EIP155Wallet {
                     to: transaction.to as Address | undefined,
                     //@ts-expect-error
                     value: transaction.value ? BigInt(transaction.value) : 0n,
+                    data: transaction.data as Hex | undefined,
                     chain: null
                 })
                 //@ts-expect-error

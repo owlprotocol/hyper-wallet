@@ -2,6 +2,7 @@ import EIP155ViemLib from '@/lib/EIP155ViemLib'
 import { smartAccountWallets } from './SmartAccountUtil'
 import { getWalletAddressFromParams } from './HelperUtil'
 import SettingsStore from '@/store/SettingsStore'
+import { bscTestnet } from 'viem/chains'
 
 export let wallet1: EIP155ViemLib
 export let wallet2: EIP155ViemLib
@@ -50,17 +51,27 @@ export function createOrRestoreEIP155Wallet() {
  * Get wallet for the address in params
  */
 export const getWallet = async (params: any) => {
-    // const eoaWallet = eip155Wallets[getWalletAddressFromParams(eip155Addresses, params)]
-    //
-    // if (eoaWallet) {
-    //     return eoaWallet
-    // }
-
+    const eoaWallet = eip155Wallets[getWalletAddressFromParams(eip155Addresses, params)] ?? eip155Wallets[0]
     const chainId = params?.chainId?.split(':')[1]
 
-    const address = eip155Wallets[0].getAddress()
+    console.debug({ eoaWallet, params })
+    
+    if (eoaWallet) {
+        //TODO: Does not work right now, display still shows the EOA ALWAYS
+        // Return default EOA
+        if (chainId && parseInt(chainId) === bscTestnet.id) {
+            return eoaWallet 
+        }
+        
+        // Return EOA with ICA override
+        const icaAddress = await eoaWallet.getIcaAddress();
 
-    return eip155Wallets[0]
+        eoaWallet.getAddress = () => icaAddress;
+
+        return eoaWallet;
+    }
+
+    //Never gets reached as we default to eoaWallets[0]
     /**
      * Smart accounts
      */
