@@ -80,6 +80,9 @@ importers:
       '@hyperlane-xyz/core':
         specifier: 5.2.1
         version: 5.2.1(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6(bufferutil@4.0.8)(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10))(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(@types/sinon-chai@3.2.12)(bufferutil@4.0.8)(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat-deploy@0.12.4(bufferutil@4.0.8)(utf-8-validate@5.0.10))(solidity-bytes-utils@0.8.2)(utf-8-validate@5.0.10)
+      '@hyperlane-xyz/registry':
+        specifier: ^4.3.6
+        version: 4.3.6
       '@openzeppelin/contracts':
         specifier: ^4.9.3
         version: 4.9.6
@@ -92,6 +95,9 @@ importers:
       '@owlprotocol/zod-sol':
         specifier: ^3.0.0
         version: 3.1.0(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       viem:
         specifier: 2.9.20
         version: 2.9.20(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.22.4)
@@ -916,6 +922,10 @@ packages:
       '@ethersproject/abi': '*'
       '@ethersproject/providers': '*'
       '@types/sinon-chai': '*'
+
+  '@hyperlane-xyz/registry@4.3.6':
+    resolution: {integrity: sha512-a0Nj4RfWS40I9Z+/3JRq69D1P7mD/pTAGDaAZa8WITK0MhkX1ZEz+8KM/g9mfmiv7CIXa8jIvulAIZq2bLgKHg==}
+    engines: {node: '>=16'}
 
   '@hyperlane-xyz/utils@5.2.1':
     resolution: {integrity: sha512-u/IFdxbfTYAH3IfrBMY+Hb9lbhZPP/IYG8n6kwFNgI9rt7MXw6ENzH651SGm89mAwCf+yRFIigvhfPhCKEmBaQ==}
@@ -5867,6 +5877,11 @@ snapshots:
       - hardhat-deploy
       - solidity-bytes-utils
       - utf-8-validate
+
+  '@hyperlane-xyz/registry@4.3.6':
+    dependencies:
+      yaml: 2.4.5
+      zod: 3.22.4
 
   '@hyperlane-xyz/utils@5.2.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:

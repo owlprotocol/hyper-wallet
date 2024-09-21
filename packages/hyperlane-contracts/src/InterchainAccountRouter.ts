@@ -2,24 +2,26 @@ import { Address, encodeFunctionData, Hex, padHex, PublicClient } from "viem";
 import {
     getRemoteInterchainAccount_address_address_address as getRemoteInterchainAccountAbi,
     getLocalInterchainAccount_uint32_bytes32_bytes32_address as getLocalInterchainAccountAbi,
+    quoteGasPayment as quoteGasPaymentAbi,
     callRemoteWithOverrides as callRemoteWithOverridesAbi,
 } from "./artifacts/InterchainAccountRouter.js";
 
 export interface GetRemoteInterchainAccountParams {
     publicClient: PublicClient;
-    router: Address;
+    remoteRouter: Address;
+    remoteIsm: Address;
     owner: Address;
-    ism: Address;
+    mainRouter: Address;
 }
 
 //TODO: Implement synchronous CREATE2 based version
 export async function getRemoteInterchainAccount(params: GetRemoteInterchainAccountParams): Promise<Address> {
-    const { publicClient, router, owner, ism } = params;
+    const { publicClient, remoteRouter, remoteIsm, owner, mainRouter } = params;
     return publicClient.readContract({
-        address: router,
+        address: mainRouter,
         abi: [getRemoteInterchainAccountAbi],
         functionName: "getRemoteInterchainAccount",
-        args: [owner, router, ism],
+        args: [owner, remoteRouter, remoteIsm],
     });
 }
 
@@ -32,6 +34,9 @@ export interface GetLocalInterchainAccountParams {
 }
 
 //TODO: Implement synchronous CREATE2 based version
+/**
+ * getLocalInterchainAccount uses parameters exlucsively of the remote chain
+ */
 export async function getLocalInterchainAccount(params: GetLocalInterchainAccountParams): Promise<Address> {
     const { publicClient, router, owner, ism, origin } = params;
 
@@ -43,6 +48,27 @@ export async function getLocalInterchainAccount(params: GetLocalInterchainAccoun
         abi: [getLocalInterchainAccountAbi],
         functionName: "getLocalInterchainAccount",
         args: [origin, ownerBytes32, routerBytes32, ism],
+    });
+}
+
+interface QuoteGasPaymentParams {
+    publicClient: PublicClient;
+    router: Address;
+    destination: number;
+    gasLimit: bigint;
+}
+
+export async function quoteGasPayment(params: QuoteGasPaymentParams) {
+    const { publicClient, router, destination, gasLimit } = params;
+
+    // Body does not matter
+    const messageBody = "0x";
+
+    return await publicClient.readContract({
+        address: router,
+        abi: [quoteGasPaymentAbi],
+        functionName: "quoteGasPayment",
+        args: [destination, messageBody, gasLimit],
     });
 }
 

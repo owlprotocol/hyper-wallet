@@ -86,11 +86,13 @@
     "tsc:watch": "tsc -w"
   },
   "dependencies": {
-    "@owlprotocol/viem-utils": "^3.0.0",
-    "@owlprotocol/zod-sol": "^3.0.0",
     "@hyperlane-xyz/core": "5.2.1",
+    "@hyperlane-xyz/registry": "^4.3.6",
     "@openzeppelin/contracts": "^4.9.3",
     "@openzeppelin/contracts-upgradeable": "^4.9.3",
+    "@owlprotocol/viem-utils": "^3.0.0",
+    "@owlprotocol/zod-sol": "^3.0.0",
+    "dotenv": "^16.4.5",
     "viem": "2.9.20",
     "zod": "3.22.4"
   },
