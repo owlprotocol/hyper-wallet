@@ -1,14 +1,4 @@
-import {
-    Address,
-    ByteArray,
-    encodeFunctionData,
-    encodePacked,
-    getCreate2Address,
-    Hex,
-    keccak256,
-    padHex,
-    PublicClient,
-} from "viem";
+import { Address, encodeFunctionData, Hex, padHex, PublicClient } from "viem";
 import {
     getRemoteInterchainAccount_address_address_address as getRemoteInterchainAccountAbi,
     getLocalInterchainAccount_uint32_bytes32_bytes32_address as getLocalInterchainAccountAbi,

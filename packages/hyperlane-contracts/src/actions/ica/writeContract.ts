@@ -1,6 +1,5 @@
 import {
     type Abi,
-    Account,
     type Chain,
     type Client,
     type ContractFunctionArgs,

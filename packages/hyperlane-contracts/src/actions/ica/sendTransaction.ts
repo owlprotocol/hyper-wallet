@@ -1,9 +1,8 @@
-import type { Account, Chain, Client, EstimateGasParameters, Hash, SendTransactionParameters, Transport } from "viem";
-import { getAction, parseAccount, parseEther } from "viem/utils";
+import type { Chain, Client, EstimateGasParameters, Hash, SendTransactionParameters, Transport } from "viem";
+import { getAction, parseEther } from "viem/utils";
 import { estimateGas, getChainId, sendTransaction as sendTransactionDefault } from "viem/actions";
 import { AccountNotFoundError } from "../../errors/index.js";
 import { InterchainAccount } from "../../accounts/interchainAccount.js";
-import { getRemoteInterchainAccount } from "../public/getRemoteInterchainAccount.js";
 import { encodeCallRemoteWithOverrides } from "../../InterchainAccountRouter.js";
 
 /**
