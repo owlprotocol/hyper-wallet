@@ -207,6 +207,9 @@ importers:
       '@ethersproject/providers':
         specifier: ^5.7.2
         version: 5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@hyperlane-xyz/registry':
+        specifier: ^4.3.6
+        version: 4.3.6
       '@json-rpc-tools/utils':
         specifier: 1.7.6
         version: 1.7.6
@@ -240,6 +243,9 @@ importers:
       '@nextui-org/react':
         specifier: 1.0.8-beta.5
         version: 1.0.8-beta.5(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@owlprotocol/hyperlane-contracts':
+        specifier: workspace:*
+        version: link:../hyperlane-contracts
       '@polkadot/keyring':
         specifier: ^10.1.2
         version: 10.4.2(@polkadot/util-crypto@10.4.2(@polkadot/util@10.4.2))(@polkadot/util@10.4.2)
