@@ -1,6 +1,6 @@
 import type { Account, Chain, Client, EstimateGasParameters, Hash, SendTransactionParameters, Transport } from "viem";
-import { getAction, parseAccount } from "viem/utils";
-import { estimateGas, getChainId } from "viem/actions";
+import { getAction, parseAccount, parseEther } from "viem/utils";
+import { estimateGas, getChainId, sendTransaction as sendTransactionDefault } from "viem/actions";
 import { AccountNotFoundError } from "../../errors/index.js";
 import { InterchainAccount } from "../../accounts/interchainAccount.js";
 import { getRemoteInterchainAccount } from "../public/getRemoteInterchainAccount.js";
@@ -60,7 +60,7 @@ export async function sendTransaction<
     client: Client<Transport, chain, account>,
     args: SendTransactionParameters<chain, account, chainOverride>,
 ): Promise<Hash> {
-    const { account: account_ = client.account, data, to, value, gas } = args;
+    const { account: account_ = client.account, to, gas } = args;
 
     if (!account_) {
         throw new AccountNotFoundError({
@@ -89,21 +89,30 @@ export async function sendTransaction<
     // quote gas
 
     // re-encode call to origin
-    const chainId = await getAction(client, getChainId, "getChainId")(client);
-
-    const router = "0x";
-    const ism = "0x";
+    const chainId = await getAction(client, getChainId, "getChainId")({});
 
     const icaRouterData = encodeCallRemoteWithOverrides({
         destination: chainId,
-        router,
-        ism,
+        router: account!.router,
+        ism: account!.ism,
         calls: [{ to: request.to!, value: request.value, data: request.data }],
     });
 
     // get gas on origin
+    const originClient = account!.originClient;
 
-    // send
+    //TODO: hard-coded fee
+    const icaRouterFee = parseEther("0.001");
+    const icaRouterRequest = {
+        to: account!.originRouter,
+        value: icaRouterFee,
+        data: icaRouterData,
+    };
 
-    return userOperationReceipt?.receipt.transactionHash;
+    //TODO: This is inaccurate, technically we should be waiting for message delivery to get the
+    // hash of the transaction that relayed the message
+    //@ts-expect-error
+    const hash = await getAction(originClient, sendTransactionDefault, "sendTransaction")(icaRouterRequest);
+
+    return hash;
 }

@@ -14,10 +14,11 @@ import {
 } from "viem";
 import { getAction } from "viem/utils";
 import { sendTransaction } from "./sendTransaction.js";
+import { InterchainAccount } from "../../accounts/interchainAccount.js";
 
 export async function writeContract<
     TChain extends Chain | undefined,
-    TAccount extends Account | undefined,
+    TAccount extends InterchainAccount | undefined,
     const TAbi extends Abi | readonly unknown[],
     TFunctionName extends ContractFunctionName<TAbi, "nonpayable" | "payable"> = ContractFunctionName<
         TAbi,

@@ -1,8 +1,10 @@
-import { Account, Address, Client } from "viem";
+import { Account, Address, Chain, Transport, WalletClient } from "viem";
 
 export type InterchainAccount = Account<Address> & {
-    originClient: Client;
+    //deploy params for ICA
     router: Address;
-    remoteRouter: Address;
-    remoteIsm: Address;
+    ism: Address;
+    //on the main chain
+    originClient: WalletClient<Transport, Chain, Account>;
+    originRouter: Address;
 };
